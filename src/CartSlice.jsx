@@ -15,21 +15,23 @@ export const CartSlice = createSlice({
                 existingItem.quantity++;
             } else {
                 // If item does not exist, add it to the cart with quantity 1
-                state.items.push({ name, image, cost, quantity: 1 });
-                dispatch(addItem(product));
+                state.items.push({ name, image, cost, quantity: 1 });       
             }
         },
         removeItem: (state, action) => {
             state.items = state.items.filter(item => item.name !== action.payload);
-            dispatch(removeItem(item.name));
         },
         updateQuantity: (state, action) => {
             const { name, quantity } = action.payload; // Destructure the product name and new quantity from the action payload
             // Find the item in the cart that matches the given name
             const itemToUpdate = state.items.find(item => item.name === name);
             if (itemToUpdate) {
-                itemToUpdate.quantity = quantity; // If the item is found, update its quantity to the new value
-                const calculateTotalQuantity = () => { return CartItems ? CartItems.reduce((total, item) => total + item.quantity, 0) : 0; };
+                if (quantity<= 0) {
+                    state.items = state.items.filter(item => item.name !== name);
+                } else {
+                    itemToUpdate.quantity = quantity;
+                }
+                }
             }
         },
     },
